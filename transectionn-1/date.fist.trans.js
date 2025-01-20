@@ -29,6 +29,8 @@
         // Ensure the "Confirmed" text stays intact
         if (span) {
           span.textContent = "Confirmed";
+          span.style.color = "var(--white)"; // Add the white color to "Confirmed"
+          span.style.fontWeight = "600"; // Add font weight to "Confirmed"
         }
 
         // Apply the necessary flexbox style to break the content into lines
@@ -38,10 +40,8 @@
         div.style.alignItems = "flex-start"; // Align text to the left
 
         // Update the date/time text with the new value
-        const newDateTime = "11:29 AM 12/22/2024";
         if (div) {
-          div.innerHTML =
-            "<span>Confirmed</span>" + "<span>" + newDateTime + "</span>"; // Separate Confirmed and the date with flex
+          div.innerHTML = `<span style="color: var(--white); font-weight: 600;">Confirmed</span><span>${"11:29 AM 12/22/2024"}</span>`; // Add color and font-weight to Confirmed text
         }
 
         console.log("Date and time updated to 11:29 AM 12/22/2024");
