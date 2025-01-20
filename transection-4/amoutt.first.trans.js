@@ -28,8 +28,8 @@
         amountElement.textContent.trim() === "9008.99999099"
       ) {
         // Update the amount to the new value
-        amountElement.textContent = "100.09999990";
-        console.log("Transaction amount updated to 100.09999990");
+        amountElement.textContent = "100.099999900";
+        console.log("Transaction amount updated to 100.099999900");
         break; // Stop after modifying the first match
       }
     }
