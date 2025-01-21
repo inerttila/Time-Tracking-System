@@ -4,9 +4,10 @@
 // @version      2025-01-21
 // @description  Modify specific transaction amounts and date/time formats on the page for multiple cases
 // @author       You
-// @match        https://stake.com/transactions/withdrawals
+// @match        https://stake.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stake.com
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 (function () {
@@ -49,13 +50,36 @@
     });
   }
 
-  window.addEventListener("load", () => {
-    modifySpecificTransaction();
+  function observeUrlChange(callback) {
+    let lastUrl = location.href;
+    const observer = new MutationObserver(() => {
+      const currentUrl = location.href;
+      if (currentUrl !== lastUrl) {
+        lastUrl = currentUrl;
+        callback(currentUrl);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function onPageLoad() {
+    if (location.pathname === "/transactions/withdrawals") {
+      modifySpecificTransaction();
+
+      const observer = new MutationObserver(() => {
+        modifySpecificTransaction();
+      });
+
+      // Observe DOM changes
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
+  // Watch for URL changes to detect navigation
+  observeUrlChange(() => {
+    onPageLoad();
   });
 
-  const observer = new MutationObserver(() => {
-    modifySpecificTransaction();
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
+  // Run the script on initial page load
+  onPageLoad();
 })();

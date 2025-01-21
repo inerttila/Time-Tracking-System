@@ -4,15 +4,15 @@
 // @version      2025-01-21
 // @description  Modify specific transaction amounts and date/time formats on the page for multiple cases
 // @author       You
-// @match        https://stake.com/transactions/withdrawals
+// @match        https://stake.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stake.com
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 (function () {
   "use strict";
 
-  // Function to modify the specific transaction amount
   function modifySpecificAmount() {
     const tableCells = document.querySelectorAll("td.table-cell-item");
 
@@ -31,7 +31,6 @@
     }
   }
 
-  // Function to modify the specific date and time
   function modifySpecificDateTime() {
     const dateElements = document.querySelectorAll(
       "td.table-cell-item.svelte-1lie80u"
@@ -44,14 +43,14 @@
       if (div && div.textContent.includes("10:21 AM 1/20/2025")) {
         if (span) {
           span.textContent = "Confirmed";
-          span.style.color = "var(--white)"; // Add the white color to "Confirmed"
-          span.style.fontWeight = "600"; // Add font weight to "Confirmed"
+          span.style.color = "var(--white)";
+          span.style.fontWeight = "600";
         }
 
         div.style.display = "flex";
-        div.style.flexDirection = "column"; // Ensure it is in column layout
-        div.style.gap = "5px"; // Controlled gap between lines (adjust as needed)
-        div.style.alignItems = "flex-start"; // Align text to the left
+        div.style.flexDirection = "column";
+        div.style.gap = "5px";
+        div.style.alignItems = "flex-start";
 
         div.innerHTML = `<span style="color: var(--white); font-weight: 600;">Confirmed</span><span>${"5:32 PM 12/23/2024"}</span>`;
         break;
@@ -59,17 +58,38 @@
     }
   }
 
-  // Run the modification functions after the page has fully loaded
-  window.addEventListener("load", () => {
+  function applyModifications() {
     modifySpecificAmount();
     modifySpecificDateTime();
+  }
+
+  function observeUrlChange(callback) {
+    let lastUrl = location.href;
+    const observer = new MutationObserver(() => {
+      const currentUrl = location.href;
+      if (currentUrl !== lastUrl) {
+        lastUrl = currentUrl;
+        callback(currentUrl);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function onPageLoad() {
+    if (location.pathname === "/transactions/withdrawals") {
+      applyModifications();
+
+      const observer = new MutationObserver(() => {
+        applyModifications();
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
+  observeUrlChange(() => {
+    onPageLoad();
   });
 
-  // Use a MutationObserver to handle dynamic content updates
-  const observer = new MutationObserver(() => {
-    modifySpecificAmount();
-    modifySpecificDateTime();
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
+  onPageLoad();
 })();

@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Replace Specific SVG for Certain Amounts
 // @namespace    http://tampermonkey.net/
-// @version      2025-01-20
-// @description  Replace the SVG only for specific transaction amounts
+// @version      2025-01-21
+// @description  Replace the SVG for specific transaction amounts dynamically on SPAs like Stake.com.
 // @author       You
-// @match        https://stake.com/transactions/withdrawals
+// @match        https://stake.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stake.com
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 (function () {
@@ -35,7 +36,6 @@
         svgElement &&
         targetAmounts.includes(amountElement.textContent.trim())
       ) {
-        // Replace the SVG element with a new SVG
         svgElement.outerHTML = `
           <span
             class="weight-normal line-height-default align-left size-default text-size-default variant-subtle is-truncate svelte-17v69ua"
@@ -60,13 +60,33 @@
     });
   }
 
-  // Run the replacement function after the page has fully loaded
-  window.addEventListener("load", replaceSvgForSpecificAmounts);
+  function onPageLoad() {
+    if (location.pathname === "/transactions/withdrawals") {
+      replaceSvgForSpecificAmounts();
 
-  // Use a MutationObserver to handle dynamic content updates
-  const observer = new MutationObserver(() => {
-    replaceSvgForSpecificAmounts();
+      const observer = new MutationObserver(() => {
+        replaceSvgForSpecificAmounts();
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
+  function observeUrlChange(callback) {
+    let lastUrl = location.href;
+    const observer = new MutationObserver(() => {
+      const currentUrl = location.href;
+      if (currentUrl !== lastUrl) {
+        lastUrl = currentUrl;
+        callback(currentUrl);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  observeUrlChange(() => {
+    onPageLoad();
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  onPageLoad();
 })();
