@@ -118,25 +118,6 @@ const handleSubmit = async (e, refetch) => {
             {{ noOptionsSelectedMsg }}
           </div>
         </div>
-
-        <!-- <div>
-          <div class="flex items-center justify-between">
-            <label for="review" class="block text-sm font-medium leading-6">Price</label>
-          </div>
-          <div class="mt-2">
-            <textarea
-              id="review"
-              name="review"
-              type="text"
-              autocomplete="review"
-              placeholder="Price and Description"
-              required
-              class="block text-black w-full ps-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              v-model="reviewInput"
-            ></textarea>
-          </div>
-        </div> -->
-
         <div>
           <button
             type="submit"
