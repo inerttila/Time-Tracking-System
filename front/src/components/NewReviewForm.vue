@@ -10,8 +10,7 @@ const newReviewStore = useNewReviewStore()
 const generalsStore = useGeneralsStore()
 const { showNewReviewForm } = storeToRefs(generalsStore)
 
-const { userNameInput, reviewInput, optionsInput, thumbsUpCount, thumbsDownCount } =
-  storeToRefs(newReviewStore)
+const { userNameInput, reviewInput, optionsInput } = storeToRefs(newReviewStore)
 const { updateUserNameInput, updateReviewInput, updateOptionsInput } = newReviewStore
 
 const noOptionsSelectedMsg = ref('')
@@ -30,7 +29,7 @@ defineProps({
 const handleSubmit = async (e, refetch) => {
   e.preventDefault()
 
-  // if no options selected, return
+  // If no options selected, return an error
   if (optionsInput.value === 'default') {
     noOptionsSelectedMsg.value = 'Please select an option'
     return
@@ -39,8 +38,6 @@ const handleSubmit = async (e, refetch) => {
   try {
     const dataObj = {
       userName: userNameInput.value || 'Anonymous',
-      thumbsUppCount: thumbsUpCount.value,
-      thumbsDownCount: thumbsDownCount.value,
       review: reviewInput.value,
       shop: optionsInput.value
     }
@@ -52,17 +49,18 @@ const handleSubmit = async (e, refetch) => {
       },
       body: JSON.stringify(dataObj)
     })
+
     if (!res.ok) {
       throw new Error('There was an error adding this product')
     }
 
-    // clear inputs
+    // Clear inputs
     updateUserNameInput('')
     updateReviewInput('')
     updateOptionsInput('default')
 
-    // show toast
-    toast.success('Product added successfully', {
+    // Show success toast
+    toast.success('Review added successfully', {
       style: {
         fontSize: '12px',
         maxWidth: '200px',
@@ -71,13 +69,14 @@ const handleSubmit = async (e, refetch) => {
       position: 'top-right'
     })
 
-    // refetch reviews
+    // Refetch reviews
     refetch()
 
-    // hide form
+    // Hide form
     showNewReviewForm.value = false
   } catch (error) {
     console.log('error', error)
+    toast.error('Failed to add review')
   }
 }
 </script>
@@ -87,14 +86,14 @@ const handleSubmit = async (e, refetch) => {
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" @submit="handleSubmit($event, refetchReviews)">
         <div>
-          <label for="username" class="block text-sm font-medium leading-6">User Staf Name</label>
+          <label for="username" class="block text-sm font-medium leading-6">User Staff Name</label>
           <div class="mt-2">
             <input
               id="username"
               name="username"
               type="text"
               autocomplete="username"
-              placeholder="User Staf Name"
+              placeholder="User Staff Name"
               class="block text-black w-full ps-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               v-model="userNameInput"
             />
