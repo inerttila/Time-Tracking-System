@@ -51,7 +51,7 @@ const handleSubmit = async (e, refetch) => {
     })
 
     if (!res.ok) {
-      throw new Error('There was an error adding this product')
+      throw new Error('There was an error adding this user')
     }
 
     // Clear inputs
@@ -60,7 +60,7 @@ const handleSubmit = async (e, refetch) => {
     updateOptionsInput('default')
 
     // Show success toast
-    toast.success('Review added successfully', {
+    toast.success('User added successfully', {
       style: {
         fontSize: '12px',
         maxWidth: '200px',
@@ -76,7 +76,7 @@ const handleSubmit = async (e, refetch) => {
     showNewReviewForm.value = false
   } catch (error) {
     console.log('error', error)
-    toast.error('Failed to add review')
+    toast.error('Failed to add User')
   }
 }
 </script>

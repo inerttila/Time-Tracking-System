@@ -20,7 +20,7 @@ const sendThumbsUpdate = async (review, type) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        [type]: true // Sends either "thumbsUp": true or "thumbsDown": true
+        [type]: true
       })
     }
   )
@@ -40,16 +40,16 @@ const sendThumbsUpdate = async (review, type) => {
   })
 }
 
-const onThumbUp = async (review) => {
+const entering = async (review) => {
   const toastId = toast.info(
     h('div', [
-      h('p', 'Are you sure you got this product?'),
+      h('p', 'Are you entering the office?'),
       h('div', { class: 'flex gap-2 mt-2' }, [
         h(
           'button',
           {
             class: 'px-4 py-2 bg-blue-500 text-white rounded-md',
-            onClick: () => handleThumb(review, 'thumbsUp', toastId)
+            onClick: () => handleThumb(review, 'entering', toastId)
           },
           'Yes'
         ),
@@ -77,16 +77,16 @@ const onThumbUp = async (review) => {
   )
 }
 
-const onThumbDown = async (review) => {
+const leaving = async (review) => {
   const toastId = toast.info(
     h('div', [
-      h('p', 'Are you sure you sold this product?'),
+      h('p', 'Are you leaving the office?'),
       h('div', { class: 'flex gap-2 mt-2' }, [
         h(
           'button',
           {
             class: 'px-4 py-2 bg-blue-500 text-white rounded-md',
-            onClick: () => handleThumb(review, 'thumbsDown', toastId)
+            onClick: () => handleThumb(review, 'leaving', toastId)
           },
           'Yes'
         ),
@@ -150,14 +150,14 @@ const handleCancel = (toastId) => {
       <div class="flex gap-2">
         <div
           class="flex cursor-pointer px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-          @click="() => onThumbUp(review)"
+          @click="() => entering(review)"
         >
           Enter
         </div>
 
         <div
           class="flex cursor-pointer px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-          @click="() => onThumbDown(review)"
+          @click="() => leaving(review)"
         >
           Leave
         </div>
