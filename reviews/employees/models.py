@@ -22,9 +22,8 @@ class Review(models.Model):
     ]
 
     userName = models.CharField(max_length=100, null=True)
-    thumbsUppCount = models.IntegerField(null=True)
-    thumbsDownCount = models.IntegerField(null=True)
-    # review = models.TextField(max_length=100, null=True)
+    thumbsUppAt = models.DateTimeField(null=True, blank=True)  # Store timestamp instead of count
+    thumbsDownAt = models.DateTimeField(null=True, blank=True)  # Store timestamp instead of count
     shop = models.CharField(
         max_length=20, 
         choices=SHOP_CHOICES,

@@ -9,4 +9,4 @@ class EmployeeSerializer(ModelSerializer):
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
-        fields = ["id", "userName", "thumbsUppCount", "thumbsDownCount",  "shop", "created_at"]
+        fields = ["id", "userName", "thumbsUppAt", "thumbsDownAt", "shop", "created_at"]
