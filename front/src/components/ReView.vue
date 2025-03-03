@@ -1,5 +1,4 @@
 <script setup>
-import { ShoppingCartIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import { ref, h } from 'vue'
 import { toast } from 'vue3-toastify'
 
@@ -12,17 +11,16 @@ defineProps({
 
 const votedThumb = ref('')
 
-const updateLikeCount = async (review) => {
+const sendThumbsUpdate = async (review, type) => {
   const res = await fetch(
-    `http://192.168.40.14:8000/api/reviews/${review.id}/update_thumbs_count/`,
+    `http://192.168.40.14:8000/api/reviews/${review.id}/update_thumbs_timestamp/`,
     {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        thumbsUppCount: review.thumbsUppCount,
-        thumbsDownCount: review.thumbsDownCount
+        [type]: true // Sends either "thumbsUp": true or "thumbsDown": true
       })
     }
   )
@@ -32,7 +30,7 @@ const updateLikeCount = async (review) => {
     return
   }
 
-  toast.success('Thanks for Checking!', {
+  toast.success('Thanks for your feedback!', {
     style: {
       fontSize: '12px',
       maxWidth: '200px',
@@ -51,7 +49,7 @@ const onThumbUp = async (review) => {
           'button',
           {
             class: 'px-4 py-2 bg-blue-500 text-white rounded-md',
-            onClick: () => handleThumbUp(review, toastId)
+            onClick: () => handleThumb(review, 'thumbsUp', toastId)
           },
           'Yes'
         ),
@@ -88,7 +86,7 @@ const onThumbDown = async (review) => {
           'button',
           {
             class: 'px-4 py-2 bg-blue-500 text-white rounded-md',
-            onClick: () => handleThumbDown(review, toastId)
+            onClick: () => handleThumb(review, 'thumbsDown', toastId)
           },
           'Yes'
         ),
@@ -116,17 +114,9 @@ const onThumbDown = async (review) => {
   )
 }
 
-const handleThumbUp = async (review, toastId) => {
-  votedThumb.value = 'up'
-  review.thumbsUppCount += 1
-  await updateLikeCount(review)
-  toast.remove(toastId)
-}
-
-const handleThumbDown = async (review, toastId) => {
-  votedThumb.value = 'down'
-  review.thumbsDownCount += 1
-  await updateLikeCount(review)
+const handleThumb = async (review, type, toastId) => {
+  votedThumb.value = type === 'thumbsUp' ? 'up' : 'down'
+  await sendThumbsUpdate(review, type)
   toast.remove(toastId)
 }
 
@@ -157,23 +147,19 @@ const handleCancel = (toastId) => {
     <div class="text-gray-950 text-sm">{{ review.shop }}</div>
 
     <div class="flex justify-between">
-      <span>{{ new Date(review.created_at).toLocaleDateString() }}</span>
-
       <div class="flex gap-2">
-        <div class="flex cursor-pointer" @click="() => onThumbUp(review)">
-          <ShoppingCartIcon
-            class="h-6 w-5"
-            :class="votedThumb === 'up' ? 'text-blue-500' : 'text-gray-100'"
-          />
-          {{ review.thumbsUppCount }}
+        <div
+          class="flex cursor-pointer px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+          @click="() => onThumbUp(review)"
+        >
+          Enter
         </div>
 
-        <div class="flex cursor-pointer" @click="() => onThumbDown(review)">
-          <XMarkIcon
-            class="h-6 w-5"
-            :class="votedThumb === 'down' ? 'text-blue-500' : 'text-gray-100'"
-          />
-          {{ review.thumbsDownCount }}
+        <div
+          class="flex cursor-pointer px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          @click="() => onThumbDown(review)"
+        >
+          Leave
         </div>
       </div>
     </div>
