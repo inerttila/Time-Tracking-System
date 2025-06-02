@@ -25,8 +25,9 @@ defineProps({
 const handleSearch = () => {
   const filtered = reviewsList.value.filter((review) => {
     return (
+      review.review.toLowerCase().includes(searchInput.value.toLowerCase()) ||
       review.userName.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-      review.shop.toLowerCase().includes(searchInput.value.toLowerCase())
+      review.company.toLowerCase().includes(searchInput.value.toLowerCase())
     )
   })
 
@@ -47,7 +48,7 @@ const handleSearch = () => {
           <MagnifyingGlassIcon class="p-3 w-10 h-10 text-gray" />
           <input
             type="text"
-            placeholder="Search Staf "
+            placeholder="Search "
             class="p-2 w-full bg-transparent text-white focus:outline-none"
             style="font-size: 12px"
             v-model="searchInput"
@@ -59,7 +60,7 @@ const handleSearch = () => {
           class="py-2 px-8 bg-gradient-to-r text-white text-lg rounded-lg shadow-lg border border-white focus:outline-none transition-transform transform hover:scale-105 lg:ml-4"
           @click="showNewReviewForm = !showNewReviewForm"
         >
-          {{ showNewReviewForm ? 'Cancel' : 'Add Staf' }}
+          {{ showNewReviewForm ? 'Cancel' : 'Add Staff' }}
         </button>
       </div>
 
