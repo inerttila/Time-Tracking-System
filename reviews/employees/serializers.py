@@ -4,9 +4,9 @@ from .models import Employee, Review
 class EmployeeSerializer(ModelSerializer):
     class Meta:
         model = Employee
-        fields = ["id", "fullname", "dep", "birthdate", "salary", "created_at"]
+        fields = ["id", "fullname", "dep", "birthdate", "salary"]
 
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
-        fields = ["id", "userName", "thumbsUppAt", "thumbsDownAt", "shop", "created_at"]
+        fields = ["id", "userName", "timein", "timeout", "company" ]
