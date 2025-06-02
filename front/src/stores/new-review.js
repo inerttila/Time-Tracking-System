@@ -5,15 +5,15 @@ export const useNewReviewStore = defineStore('newReview', () => {
   const userNameInput = ref('')
   const reviewInput = ref('')
   const optionsInput = ref('default')
-  const thumbsUpCount = ref(0)
-  const thumbsDownCount = ref(0)
+  const timein = ref(0)
+  const timeout = ref(0)
 
-  function incrementThumbsUp() {
-    thumbsUpCount.value++
+  function incrementtimein() {
+    timein.value++
   }
 
-  function incrementThumbsDown() {
-    thumbsDownCount.value++
+  function incrementtimeout() {
+    timeout.value++
   }
 
   function updateUserNameInput(newUserName) {
@@ -32,10 +32,10 @@ export const useNewReviewStore = defineStore('newReview', () => {
     userNameInput,
     reviewInput,
     optionsInput,
-    thumbsUpCount,
-    thumbsDownCount,
-    incrementThumbsUp,
-    incrementThumbsDown,
+    timein,
+    timeout,
+    incrementtimein,
+    incrementtimeout,
     updateUserNameInput,
     updateReviewInput,
     updateOptionsInput
